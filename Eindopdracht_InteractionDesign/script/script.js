@@ -98,7 +98,7 @@ const markerSearchedAirport = function(city, countrycode, airportcode, airportna
 
     //Designen van marker
     var airportIcon = L.icon({
-        iconUrl: '/img/svg/airport.svg',
+        iconUrl: 'Eindopdracht_InteractionDesign/img/svg/airport.svg',
         iconSize: [36, 36]
     });
 
