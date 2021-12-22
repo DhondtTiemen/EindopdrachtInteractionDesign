@@ -18,7 +18,7 @@ const airportsMarker = function(airports){
 
         //Designen van marker
         var airportIcon = L.icon({
-            iconUrl: '/img/svg/airport.svg',
+            iconUrl: 'img/svg/airport.svg',
             iconSize: [36, 36]
         });
 
@@ -70,7 +70,7 @@ const stopAirportMarker = function(airport){
     });
 
     var airportIcon = L.icon({
-        iconUrl: '/img/svg/finishflag.svg',
+        iconUrl: 'img/svg/finishflag.svg',
         iconSize: [36, 36]
     });
 
@@ -98,7 +98,7 @@ const markerSearchedAirport = function(city, countrycode, airportcode, airportna
 
     //Designen van marker
     var airportIcon = L.icon({
-        iconUrl: 'Eindopdracht_InteractionDesign/img/svg/airport.svg',
+        iconUrl: 'img/svg/airport.svg',
         iconSize: [36, 36]
     });
 
