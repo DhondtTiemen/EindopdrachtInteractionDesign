@@ -18,7 +18,7 @@ const airportsMarker = function(airports){
 
         //Designen van marker
         var airportIcon = L.icon({
-            iconUrl: 'img/svg/airport.svg',
+            iconUrl: '/img/svg/airport.svg',
             iconSize: [36, 36]
         });
 
@@ -46,7 +46,7 @@ const startAirportMarker = function(airport){
 
     //Designen van marker
     var airportIcon = L.icon({
-        iconUrl: 'img/svg/airport.svg',
+        iconUrl: '/img/svg/airport.svg',
         iconSize: [36, 36]
     });
 
@@ -65,12 +65,12 @@ const stopAirportMarker = function(airport){
 
     //Designen van markers
     var startairportIcon = L.icon({
-        iconUrl: 'img/svg/airport.svg',
+        iconUrl: '/img/svg/airport.svg',
         iconSize: [36, 36]
     });
 
     var airportIcon = L.icon({
-        iconUrl: 'img/svg/finishflag.svg',
+        iconUrl: '/img/svg/finishflag.svg',
         iconSize: [36, 36]
     });
 
@@ -98,7 +98,7 @@ const markerSearchedAirport = function(city, countrycode, airportcode, airportna
 
     //Designen van marker
     var airportIcon = L.icon({
-        iconUrl: 'img/svg/airport.svg',
+        iconUrl: '/img/svg/airport.svg',
         iconSize: [36, 36]
     });
 
