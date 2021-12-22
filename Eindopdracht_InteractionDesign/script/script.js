@@ -182,7 +182,7 @@ const showAirports = function(jsonObject){
                                     </div>
                                 </div>`;
 
-        htmlstringAirportEnd = `</div>`
+        htmlstringAirportEnd = `</div>`;
 
         htmlstringAirports = `${htmlstringSearchBar} ${htmlstringAirportCity} ${htmlstringAirportEnd}`;
     }
