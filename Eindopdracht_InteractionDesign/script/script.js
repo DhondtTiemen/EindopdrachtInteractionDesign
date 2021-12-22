@@ -18,7 +18,7 @@ const airportsMarker = function(airports){
 
         //Designen van marker
         var airportIcon = L.icon({
-            iconUrl: 'img\svg\airport.svg',
+            iconUrl: '\img/svg/airport.svg',
             iconSize: [36, 36]
         });
 
