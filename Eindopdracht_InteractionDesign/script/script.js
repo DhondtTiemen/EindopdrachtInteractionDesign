@@ -5,42 +5,37 @@ let map, layergroup;
 
 /*TO DO
 - Als het geen geldige input is vermeldens
-- Search animatie toevoegen, bij enter bij zoeken een kruis opkomen
 */
 
 //----- Add Markers ----- //
 const airportsMarker = function(airports){
-    console.log(airports);
+    //console.log(airports);
 
     layergroup.clearLayers();
 
-    //console.log(airport.city);
+    for (const airport of airports){
+        //console.log(airport);
 
-    //Designen van marker
-    var airportIcon = L.icon({
-        iconUrl: '../img/svg/airport.svg',
-        iconSize: [36, 36]
-    });
+        //Designen van marker
+        var airportIcon = L.icon({
+            iconUrl: '../img/svg/airport.svg',
+            iconSize: [36, 36]
+        });
 
-    //Aanmaken van marker
-    let airportMarker = L.marker([airport.latitude, airport.longitude], {icon: airportIcon}).addTo(layergroup);
-    // airportMarker.bindPopup(`<div class="c-airport__list-item u-max-width-sm js-airport" airportname="${airport.name}" city="${airport.city}" countrycode="${airport.countryCode}" airportcode="${airport.airportCode}" lat="${airport.latitude}" long="${airport.longitude}">
-    //                             <p class="c-card__airportname">${airport.name}</p>
-    //                             <p class="c-card__airportcity">${airport.city}, ${airport.countryCode}</p>
-    //                         </div>`);
+        //Aanmaken van marker
+        let airportMarker = L.marker([airport.latitude, airport.longitude], {icon: airportIcon}).addTo(layergroup);
+        airportMarker.bindPopup(`<div class="js-airport js-flightlink" airportname="${airport.name}" city="${airport.city}" countrycode="${airport.countryCode}" airportcode="${airport.fs}" lat="${airport.latitude}" long="${airport.longitude}">
+                                    <p class="c-card-info c-card-info__title">${airport.name}</p>
+                                    <p class="c-card-info c-card-info__subtitle">${airport.city}, ${airport.countryCode}</p>
+                                    <a class="c-card-airport__marker-link">View Flights</a>
+                                </div>`);
 
-    airportMarker.bindPopup(`<div class="js-flightlink" airportname="${airport.name}" city="${airport.city}" countrycode="${airport.countryCode}" airportcode="${airport.airportCode}" lat="${airport.latitude}" long="${airport.longitude}">
-                                <p class="c-card-airport__name">${airport.name}</p>
-                                <p class="c-card-airport__city">${airport.city}, ${airport.countryCode}</p>
-                                <p class="c-card-airport__marker-link">View Flights</p>
-                            </div>`);
+        airportMarker.on('click', listenToClickMarker);
+    }
 
-    airportMarker.on('click', listenToClickMarker);        
-
-    //Kaart instellen op markers
-    var bounds = L.featureGroup(airportMarker);
-    map.fitBounds(bounds.getBounds());
-
+    //Kaart terugplaatsen op Belgïe
+    map.setView([50.768707, 4.479281], 7.5);
+    
     listenToClickAirport();
 }
 
@@ -57,36 +52,35 @@ const startAirportMarker = function(airport){
 
     //Aanmaken van marker
     let airportMarker = L.marker([airport.airportlatitude, airport.airportlongitude], {icon: airportIcon}).addTo(layergroup);
-    // airportMarker.bindPopup(`<div class="c-airport__list-item u-max-width-sm js-airport">
-    //                             <p class="c-card__airportname">${airport.airportname}</p>
-    //                             <p class="c-card__airportcity">${airport.airportcity}, ${airport.countrycode}</p>
-    //                         </div>`);
-
-    airportMarker.bindPopup(`<div class="js-flightlink" airportname="${airport.name}" city="${airport.city}" countrycode="${airport.countryCode}" airportcode="${airport.airportCode}" lat="${airport.latitude}" long="${airport.longitude}">
-                                <p class="c-card-airport__name">${airport.name}</p>
-                                <p class="c-card-airport__city">${airport.city}, ${airport.countryCode}</p>
+    airportMarker.bindPopup(`<div class="js-airport">
+                                <p class="c-card-info c-card-info__title">${airport.airportname}</p>
+                                <p class="c-card-info c-card-info__subtitle">${airport.airportcity}, ${airport.countrycode}</p>
                             </div>`);
 }
 
 const stopAirportMarker = function(airport){
     //console.log(airport);
 
-    //Designen van marker
+    layergroup.clearLayers();
+
+    //Designen van markers
+    var startairportIcon = L.icon({
+        iconUrl: '../img/svg/airport.svg',
+        iconSize: [36, 36]
+    });
+
     var airportIcon = L.icon({
         iconUrl: '../img/svg/finishflag.svg',
         iconSize: [36, 36]
     });
 
-    //Aanmaken van marker
-    let airportMarker = L.marker([airport.airportlatitude, airport.airportlongitude], {icon: airportIcon}).addTo(layergroup);
-    // airportMarker.bindPopup(`<div class="c-airport__list-item u-max-width-sm js-airport">
-    //                             <p class="c-card__airportname">${airport.airportname}</p>
-    //                             <p class="c-card__airportcity">${airport.airportcity}, ${airport.countrycode}</p>
-    //                         </div>`);
+    //Aanmaken van markers
+    let startairportMarker = L.marker([airport.destinationlatitude, airport.destinationlongitude], {icon: startairportIcon}).addTo(layergroup);
 
-    airportMarker.bindPopup(`<div class="js-flightlink" airportname="${airport.name}" city="${airport.city}" countrycode="${airport.countryCode}" airportcode="${airport.airportCode}" lat="${airport.latitude}" long="${airport.longitude}">
-                                <p class="c-card-airport__name">${airport.name}</p>
-                                <p class="c-card-airport__city">${airport.city}, ${airport.countryCode}</p>
+    let airportMarker = L.marker([airport.airportlatitude, airport.airportlongitude], {icon: airportIcon}).addTo(layergroup);
+    airportMarker.bindPopup(`<div class="js-airport">
+                                <p class="c-card-info c-card-info__title">${airport.airportname}</p>
+                                <p class="c-card-info c-card-info__subtitle">${airport.airportcity}, ${airport.countrycode}</p>
                             </div>`);
 
     //Lijn aanmaken om airports te verbinden
@@ -99,7 +93,7 @@ const stopAirportMarker = function(airport){
     map.fitBounds(polyline.getBounds());
 }
 
-const markerSearchedAirport = function(city, countrycode, airportname, lat, long){
+const markerSearchedAirport = function(city, countrycode, airportcode, airportname, lat, long){
     //console.log(city);
 
     //Designen van marker
@@ -110,17 +104,15 @@ const markerSearchedAirport = function(city, countrycode, airportname, lat, long
 
     //Aanmaken van marker
     let airportMarker = L.marker([lat, long], {icon: airportIcon}).addTo(layergroup);
-    // airportMarker.bindPopup(`<div class="c-airport__list-item u-max-width-sm js-airport">
-    //                             <p class="c-card__airportname">${airportname}</p>
-    //                             <p class="c-card__airportcity">${city}, ${countrycode}</p>
-    //                         </div>`);
-
-    airportMarker.bindPopup(`<div class="js-flightlink" airportname="${airport.name}" city="${airport.city}" countrycode="${airport.countryCode}" airportcode="${airport.airportCode}" lat="${airport.latitude}" long="${airport.longitude}">
-                                <p class="c-card-airport__name">${airport.name}</p>
-                                <p class="c-card-airport__city">${airport.city}, ${airport.countryCode}</p>
+    airportMarker.bindPopup(`<div class="js-airport js-flightlink" airportname="${airportname}" city="${city}" countrycode="${countrycode}" airportcode="${airportcode}" lat="${lat}" long="${long}">
+                                <p class="c-card-info c-card-info__title">${airportname}</p>
+                                <p class="c-card-info c-card-info__subtitle">${city}, ${countrycode}</p>
+                                <a class="c-card-airport__marker-link">View Flights</a>
                             </div>`);
 
-    map.fitBounds(airportMarker.getBounds());
+    airportMarker.on('click', listenToClickMarker);
+
+    //map.fitBounds(airportMarker.getBounds());
 }
 
 //----- SHOW functions ----- //
@@ -170,32 +162,22 @@ const showAirports = function(jsonObject){
 
         const airportCoordinaten = `${airportLatitude}, ${airportLongitude}`;
 
-        htmlstringSearchBar = `<div class="c-search o-layout o-layout--align-center">
-                                <input class="c-search__input o-layout__item u-5-of-6 js-searchbar" type="text" placeholder="Search airport.. ">
-                                <svg class="c-search__icon o-layout__item u-1-of-6 js-searchicon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                            </div>
-                            <div class="c-card-airport__list">`;
+        htmlstringSearchBar = `<div class="o-layout__item u-1-of-3-bp4">
+                                    <div class="c-search o-layout">
+                                        <input class="c-search__input o-layout__item u-5-of-6 js-searchbar" type="text" placeholder="Search airport.. ">
+                                        <svg class="c-search__icon o-layout__item u-1-of-6 js-searchicon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                        <svg class="c-search__icon o-layout__item u-1-of-6 js-clearicon hidden" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+                                    </div>
+                                    <div class="c-card__list js-airports">`;
 
-        // htmlstringAirportCity += `<div class="c-card-airport js-airport" airportname="${airportName}" city="${airportCity}" countrycode="${countryCode}" airportcode="${airportCode}" lat="${airportLatitude}" long="${airportLongitude}"">
-        //                             <div class="c-card-airport__body o-layout o-layout--align-center o-layout--justify-center">
-        //                                 <div class="o-layout__item u-5-of-6">
-        //                                     <p class="c-card-airport__name">${airportName}</p>
-        //                                     <p class="c-card-airport__city">${airportCity}, ${countryCode}</p>
-        //                                 </div>
-        //                                 <div class="o-layout__item u-1-of-6">
-        //                                     <svg class="c-card-airport__icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
-        //                                 </div>
-        //                             </div>
-        //                         </div>`;
-
-        htmlstringAirportCity += `<div class="c-card-airport js-airport" airportname="${airportName}" city="${airportCity}" countrycode="${countryCode}" airportcode="${airportCode}" lat="${airportLatitude}" long="${airportLongitude}">
-                                    <div class="c-card-airport__body o-layout o-layout--align-center o-layout--justify-center">
+        htmlstringAirportCity += `<div class="c-card js-airport" airportname="${airportName}" city="${airportCity}" countrycode="${countryCode}" airportcode="${airportCode}" lat="${airportLatitude}" long="${airportLongitude}">
+                                    <div class="o-layout o-layout--align-center o-layout--justify-center">
                                         <div class="o-layout__item u-5-of-6">
-                                            <p class="c-card-airport__name">${airportName}</p>
-                                            <p class="c-card-airport__city">${airportCity}, ${countryCode}</p>
+                                            <p class="c-card-info c-card-info__title">${airportName}</p>
+                                            <p class="c-card-info c-card-info__subtitle">${airportCity}, ${countryCode}</p>
                                         </div>
                                         <div class="o-layout__item u-1-of-6">
-                                            <svg class="c-card-airport__icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
+                                            <svg class="c-card__icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
                                         </div>
                                     </div>
                                 </div>`;
@@ -214,8 +196,8 @@ const showAirports = function(jsonObject){
 
 const showFlights = async function(flightsByAirport, airport){
     console.log("Flights zijn aan het inladen...");
-    //console.log(flights);
-    //console.log(airport);
+    console.log(airport);
+    console.log(flightsByAirport);
 
     const airportHTML = document.querySelector(".js-airports");
     let htmlstringFlightsTemperarely = "";
@@ -231,13 +213,17 @@ const showFlights = async function(flightsByAirport, airport){
     const todayYear = today.getFullYear();
     const todayDate = `${todayMonth} ${todayNumber}, ${todayYear}`;
 
-    htmlstringAirportCity = `<div class="c-card-flight__title o-layout o-layout--gutter-sm o-layout--align-center o-layout--justify-center">
-                                <svg class="c-card-flight__backbutton o-layout__item u-1-of-6 js-backbutton-flights" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M15,5l-1.41,1.41L18.17,11H2V13h16.17l-4.59,4.59L15,19l7-7L15,5z"/></svg>
-                                <div class="o-layout__item u-5-of-6">
-                                <p class="c-card-flight__choosen-airport">${airport.airportname}</p>
-                                <p class="c-card-flight__choosen-date">${todayDate}</p>
+    htmlstringAirportCity = `<div class="o-layout__item u-1-of-3-bp4">
+                                <div class="c-header o-layout o-layout--align-center o-layout--justify-center">
+                                    <div class="o-layout__item u-1-of-6 js-backbutton-flights">
+                                        <svg class="c-card__icon u-turn-180" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>
+                                    </div>
+                                    <div class="o-layout__item u-5-of-6">
+                                        <p class="c-card-info c-card-info__title u-mb-clear">${airport.airportname}</p>
+                                        <p class="c-card-info c-card-info__subtitle">${todayDate}</p>
+                                    </div>
                                 </div>
-                            </div>`;
+                                <div class="c-card__list js-flights">`;
 
 
 
@@ -247,7 +233,7 @@ const showFlights = async function(flightsByAirport, airport){
     if (aantalFlights == 0) {
         console.log("Er zijn geen vluchten...");
 
-        htmlstringFlights = `<div class="c-card-flight__footer">
+        htmlstringFlights = `<div class="c-lead--sm u-text-align-center has-error">
                                 Er zijn op dit moment geen vluchten vanuit airport <b>${airport.airportname}</b>
                             </div>`;
 
@@ -258,18 +244,18 @@ const showFlights = async function(flightsByAirport, airport){
     }
 
     for (i = 0; i < aantalFlights; i++){
-        htmlstringFlightsTemperarely += `<div class="c-card-flight skeleton js-flight">
-                                            <p class="c-card-flight__number hide-text">Flight: 2203</p>
-                                            <div class="o-layout o-layout--gutter-sm o-layout--align-center o-layout--justify-center">
+        htmlstringFlightsTemperarely += `<div class="c-card skeleton js-flight">
+                                            <p class="c-card-info c-card-info__subsubtitle u-italic hide-text">Flight: 2203</p>
+                                            <div class="o-layout o-layout--align-center o-layout--justify-center">
                                                 <div class="o-layout__item u-1-of-3">
-                                                    <p class="c-card-flight__departure-city hide-text"></p>
-                                                    <p class="c-card-flight__departure-country hide-text"></p>
-                                                    <p class="c-card-flight__departure-time hide-text"></p>
+                                                    <p class="c-card-info c-card-info__title u-text-align-start hide-text"></p>
+                                                    <p class="c-card-info c-card-info__subtitle u-text-align-start hide-text"></p>
+                                                    <p class="c-card-info c-card-info__subsubtitle u-text-align-start hide-text"></p>
                                                 </div>
                                                 <div class="o-layout__item u-1-of-3">
-                                                    <p class="c-card-flight__arrival-city hide-text"></p>
-                                                    <p class="c-card-flight__arrival-country hide-text"></p>
-                                                    <p class="c-card-flight__arrival-time hide-text"></p>
+                                                    <p class="c-card-info c-card-info__title u-text-align-end hide-text"></p>
+                                                    <p class="c-card-info c-card-info__subtitle u-text-align-end hide-text"></p>
+                                                    <p class="c-card-info c-card-info__subsubtitle u-text-align-end hide-text"></p>
                                                 </div>
                                             </div>
                                         </div>`;
@@ -340,45 +326,26 @@ const showFlights = async function(flightsByAirport, airport){
         const stopAirportLongitude = stopAirport.longitude;
         //console.log(stopAirportLongitude);
 
-        // htmlstringFlights += `<div class="c-card-flight__body js-flight" name="${stopAirportName}" city="${stopAirportCity}" countrycode="${stopAirportCountryCode}" latStart="${startAirportLatitude}" longStart="${startAirportLongitude}" latStop="${stopAirportLatitude}" longStop="${stopAirportLongitude}">
-        //                             <p class="c-card-flight__number">Flight: ${flightNumber}</p>
-        //                             <div class="o-layout o-layout--gutter-sm o-layout--align-center o-layout--justify-center">
-        //                                 <div class="o-layout__item u-1-of-3">
-        //                                     <p class="c-card-flight__departure-city">${startAirportCity}</p>
-        //                                     <p class="c-card-flight__departure-country">${startAirportCountry}</p>
-        //                                     <p class="c-card-flight__departure-time">${departureTime}</p>
-        //                                 </div>
-        //                                 <div class="o-layout__item u-1-of-3 c-card-flight__line">
-        //                                     <svg class="c-card-flight__line" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M15,5l-1.41,1.41L18.17,11H2V13h16.17l-4.59,4.59L15,19l7-7L15,5z"/></svg>
-        //                                 </div>
-        //                                 <div class="o-layout__item u-1-of-3">
-        //                                     <p class="c-card-flight__arrival-city">${stopAirportCity}</p>
-        //                                     <p class="c-card-flight__arrival-country">${stopAirportCountry}</p>
-        //                                     <p class="c-card-flight__arrival-time">${arrivalTime}</p>
-        //                                 </div>
-        //                             </div>
-        //                         </div>`;
-
-        htmlstringFlights += `<div class="c-card-flight js-flight" name="${stopAirportName}" city="${stopAirportCity}" countrycode="${stopAirportCountryCode}" latStart="${startAirportLatitude}" longStart="${startAirportLongitude}" latStop="${stopAirportLatitude}" longStop="${stopAirportLongitude}">
-                                    <p class="c-card-flight__number">Flight: ${flightNumber}</p>
-                                    <div class="o-layout  o-layout--align-center o-layout--justify-center">
-                                        <div class="o-layout__item u-1-of-2">
-                                            <p class="c-card-flight__departure-city">${startAirportCity}</p>
-                                            <p class="c-card-flight__departure-country">${startAirportCountry}</p>
-                                            <p class="c-card-flight__departure-time">${departureTime}</p>
-                                        </div>
-                                        <div class="o-layout__item u-1-of-2">
-                                            <p class="c-card-flight__arrival-city">${stopAirportCity}</p>
-                                            <p class="c-card-flight__arrival-country">${stopAirportCountry}</p>
-                                            <p class="c-card-flight__arrival-time">${arrivalTime}</p>
-                                        </div>
+        htmlstringFlights += `<div class="c-card js-flight" name="${stopAirportName}" city="${stopAirportCity}" countrycode="${stopAirportCountryCode}" latStart="${startAirportLatitude}" longStart="${startAirportLongitude}" latStop="${stopAirportLatitude}" longStop="${stopAirportLongitude}">
+                                <p class="c-card-info c-card-info__subsubtitle u-italic">Flight: ${flightNumber}</p>
+                                <div class="o-layout o-layout--align-center o-layout--justify-center">
+                                    <div class="o-layout__item u-1-of-2">
+                                        <p class="c-card-info c-card-info__title u-text-align-start">${startAirportCity}</p>
+                                        <p class="c-card-info c-card-info__subtitle u-text-align-start">${startAirportCountry}</p>
+                                        <p class="c-card-info c-card-info__subsubtitle u-text-align-start">${departureTime}</p>
                                     </div>
-                                    <div class="c-card-flight__line o-layout__item u-1-of-3">
-                                        <div class="c-card-flight__line-item"></div>
-                                        <svg class="c-card-flight__line-plane" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                                        <div class="c-card-flight__line-item"></div>
+                                    <div class="o-layout__item u-1-of-2">
+                                        <p class="c-card-info c-card-info__title u-text-align-end">${stopAirportCity}</p>
+                                        <p class="c-card-info c-card-info__subtitle u-text-align-end">${stopAirportCountry}</p>
+                                        <p class="c-card-info c-card-info__subsubtitle u-text-align-end">${arrivalTime}</p>
                                     </div>
-                                </div>`;
+                                </div>
+                                <div class="c-status-line o-layout__item u-1-of-3">
+                                    <div class="c-status-line-circle"></div>
+                                    <svg class="c-status-line-plane" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                                    <div class="c-status-line-circle"></div>
+                                </div>
+                            </div>`;
 
         htmlstringEnd = `</div>`;
     }
@@ -402,6 +369,7 @@ const getMap = function(){
         zoomOffset: -1,
         zoomOffset: -1,
         accessToken: "pk.eyJ1IjoidGllbWVuZCIsImEiOiJja3dkbzFmMTgwdzJsMzFuMjB5cDUxb2h6In0.5o5LR0PFO1M5YXMCfOXIMw",
+        className: 'map-tiles'
     }).addTo(map);
 
     layergroup = L.layerGroup().addTo(map);
@@ -442,6 +410,14 @@ const listenToClickLogo = function(){
     })
 }
 
+const listenToDarkMode = function(){
+    const toggle = document.querySelector('.js-darkmode');
+    toggle.addEventListener('change', function(){
+        console.log('Dark mode...');
+        document.querySelector('html').classList.toggle('is-night');
+    })
+}
+
 const listenToClickBackButton = function(){
     const button = document.querySelector('.js-backbutton-flights');
     button.addEventListener('click', function(){
@@ -470,6 +446,7 @@ const listenToSearchAirport = function(){
                 //console.log(airport[i]);
                 let city = airport[i].getAttribute("city");
                 let countrycode = airport[i].getAttribute("countrycode");
+                let airportcode = airport[i].getAttribute("airportcode");
                 let airportname = airport[i].getAttribute("airportname");
                 let lat = airport[i].getAttribute("lat");
                 let long = airport[i].getAttribute("long");
@@ -477,7 +454,7 @@ const listenToSearchAirport = function(){
         
                 if (city.toUpperCase().indexOf(zoekopdracht) > -1){
                     airport[i].style.display = "";
-                    markerSearchedAirport(city, countrycode, airportname, lat, long);
+                    markerSearchedAirport(city, countrycode, airportcode, airportname, lat, long);
                 }
                 else {
                     airport[i].style.display = "none";
@@ -495,7 +472,7 @@ const listenToSearchAirport = function(){
                 input.value = "";
                 iconClear.classList.add('hidden');
                 iconSearch.classList.remove('hidden');
-
+                getAirports();
             });
 
             if(input.value == ""){
@@ -518,6 +495,7 @@ const listenToSearchAirport = function(){
                 //console.log(airport[i]);
                 let city = airport[i].getAttribute("city");
                 let countrycode = airport[i].getAttribute("countrycode");
+                let airportcode = airport[i].getAttribute("airportcode");
                 let airportname = airport[i].getAttribute("airportname");
                 let lat = airport[i].getAttribute("lat");
                 let long = airport[i].getAttribute("long");
@@ -525,7 +503,7 @@ const listenToSearchAirport = function(){
         
                 if (city.toUpperCase().indexOf(zoekopdracht) > -1){
                     airport[i].style.display = "";
-                    markerSearchedAirport(city, countrycode, airportname, lat, long);
+                    markerSearchedAirport(city, countrycode, airportcode, airportname, lat, long);
                 }
                 else {
                     airport[i].style.display = "none";
@@ -644,5 +622,6 @@ document.addEventListener("DOMContentLoaded", function() {
     listenToClickLogo();
     getMap();
     listenToSearchAirport();
+    listenToDarkMode();
     getAirports();
 });

@@ -35,6 +35,8 @@
         /* Colors, Error */
         --global-color-error: #db0f00;
 
+        /* Colors, SVG Darkmode */
+        --global-color-darkmode: var(--global-page-color);
 
         /*Fonts*/
         --global-font-family: "Inter";
@@ -54,7 +56,7 @@
         --global-borderRadius: 12px;
         --global-borderWidth: 1px;
         --global-borderWidth-x2: 2px;
-        --global-borderColor: var(--global-color-neutral-x-light);
+        --global-borderColor: var(--global-color-neutral-xx-light);
         --global-hoverBorderColor: var(--global-color-neutral-light);
         --global-focusBorderColor: var(--global-color-alpha);
     
@@ -76,6 +78,9 @@
         --global-input-focus-borderColor: var(--global-color-alpha);
         --global-input-boxShadow: 0 0 0 3px var(--global-color-alpha-x-transparent);
         --global-input-focus-boxShadow: 0 0 0 3px var(--global-color-alpha-x-transparent);
+
+        /* Map color */
+        --map-tiles-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -86,6 +91,11 @@
         --global-page-selectionBackgroundColor: var(--global-color-alpha);
 
         --global-card-backgroundColor: var(--global-color-neutral-xxxxx-dark);
+        --global-color-darkmode: Yellow;
+    }
+
+    .map-tiles {
+        filter: var(--map-tiles-filter, none);
     }
 }
 
@@ -220,6 +230,7 @@ hr {
 a {
     color: var(--global-page-linkColor);
     transition: all .1s ease-in-out;
+    text-decoration: underline;
 }
 
 a:visited,
@@ -521,6 +532,86 @@ a:focus {
     }
   }
 
+/*
+    Component: Toggle button
+*/
+.c-custom-toggle {
+    --toggle-backgroundColor: var(--global-page-backgroundColor);
+    --toggle-borderColor: var(--global-borderColor);
+    --toggle-focus-borderColor: var(--global-focusBorderColor);
+    --toggle-checked-borderColor: var(--global-focusBorderColor);
+    --toggle-checked-backgroundColor: var(--global-color-alpha);
+    --toggle-focus-boxShadow: 0 0 0 2px var(--global-color-alpha-transparent);
+    --toggle__switch-backgroundColor: var(--global-card-backgroundColor);
+    --toggle__switch-checked-backgroundColor: var(--global-card-backgroundColor);
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/*Dit is de omhuizing van de toggle*/
+.c-custom-toggle__fake-input {
+    display: block;
+    height: 24px;
+    width: 48px;
+
+    background-color: var(--toggle-backgroundColor);
+    border: var(--global-borderWidth) solid var(--toggle-borderColor);
+    border-radius: 32px;
+    box-shadow: var(--toggle-boxShadow, 0);
+    
+    /*Transition*/
+    transition: all 0.5 ease-out;
+}
+
+/*Dit is de bol van de toggle button*/
+.c-custom-toggle__fake-input::after {
+    position: relative;
+    display: block;
+    content: "";
+    height: 22px;
+    width: 22px;
+    border-radius: 22px;
+    box-shadow: 0 1px 3px 1px #00000033;
+    background-color: var(--toggle__switch-backgroundColor);
+        
+    /*Transition*/
+    transition: all 0.5 ease-out;
+}
+
+/*Focus and Active state*/
+.c-option--hidden:focus + .c-custom-toggle {
+    --toggle-borderColor: var(--toggle-focus-borderColor);
+    --toggle-boxShadow: var(--toggle-focus-boxShadow);
+}
+
+/*Checked state*/
+.c-option--hidden:checked + .c-custom-toggle {
+    --toggle-backgroundColor: var(--toggle-checked-backgroundColor);
+    --toggle-borderColor: var(--toggle-checked-borderColor);
+    --toggle__switch-backgroundColor: var(--toggle__switch-checked-backgroundColor);
+}
+
+.c-option--hidden:checked + .c-custom-toggle .c-custom-toggle__fake-input::after{
+    transform: translate(24px, 0);
+}
+
+/*Special active state*/
+.c-option--hidden:active + .c-custom-toggle .c-custom-toggle__fake-input::after {
+    width: 28px;
+}
+
+.c-option--hidden:active:checked + .c-custom-toggle .c-custom-toggle__fake-input::after {
+    margin-left: -6px;
+}
+
+/*
+    Component: SVG
+*/
+.c-svg {
+    fill: var(--global-color-darkmode);
+}
 
 /*
     Component: Map
@@ -535,6 +626,12 @@ a:focus {
     box-shadow: var(--map-boxShadow);
 
     margin-bottom: var(--global-whitespace-xl);
+}
+
+@media (max-width: 768px) {
+    .c-map {
+        --map-height: 50vh;
+    }
 }
 
 /*
@@ -726,7 +823,7 @@ a:focus {
     Component: Skeleton
 */
 .c-card.skeleton {
-    background: white;
+    background: var(--global-card-backgroundColor);
     color: transparent;
     position: relative;
     overflow: hidden;
@@ -941,6 +1038,11 @@ a:focus {
 
 .c-lead {
     font-weight: 200;
+}
+
+.c-lead--sm {
+    font-size: 0.75rem;
+    line-height: 1.5;
 }
 
 .c-lead--lg {
@@ -1221,43 +1323,49 @@ a:focus {
     height: var(--loader-viewbox);
 }
 
-.c-loader__circle {
-    stroke: var(--global-color-alpha);
-    fill: transparent;
-    stroke-linecap: round;
-    stroke-width: var(--circle-stroke-width);
-    stroke-dasharray: var(--circle-gap), var(--circle-circumference-gap);
-    stroke-dashoffset: 0;
-    
-    r: var(--circle-radius);
-    cx: var(--circle-center);
-    cy: var(--circle-center);
-
-    animation: rotateCircle calc(var(--animation-duration) + 0.25s) linear infinite, 
-        strokeCircle var(--animation-duration) infinite;
-    transform-origin: center;
-}
-
-@keyframes rotateCircle {
-    100% {
-      transform: rotate(360deg);
-    }
+/*
+    Component: Scrollbar
+*/
+::-webkit-scrollbar {
+    width: 3px;
   }
   
-  @keyframes strokeCircle {
-    50% {
-      stroke-dasharray: var(--circle-circumference-gap), var(--circle-gap);
-      stroke-dashoffset: 0;
-    }
-    100% {
-      stroke-dasharray: var(--circle-gap), var(--circle-circumference-gap);
-      stroke-dashoffset: calc(var(--circle-circumference) * -1);
-    }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: var(--global-borderColor);
+    border-radius: var(--global-borderRadius);
   }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--global-color-alpha);
+    border-radius: var(--global-borderRadius);
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--global-color-alpha);
+  }
+
+  
 
 /*------------------------------------*\
   #UTILITIES
 \*------------------------------------*/
+.is-night {
+    --global-page-color: var(--global-color-neutral-xxxx-light);
+    --global-page-backgroundColor: var(--global-color-neutral-xxxxx-dark);
+    --global-page-selectionColor: var(--global-color-neutral-xxxxx-light);
+    --global-page-selectionBackgroundColor: var(--global-color-alpha);
+
+    --global-card-backgroundColor: var(--global-color-neutral-xxxxx-dark);
+    --global-color-darkmode: Yellow;
+}
+
+.is-night .map-tiles {
+    filter: var(--map-tiles-filter, none);
+}
+
 /*
     Utilities: color
     ---
@@ -1312,6 +1420,10 @@ a:focus {
 
 .u-color-primary-dark {
     color: #3E3EA8;
+}
+
+.has-error {
+    color: var(--global-color-error);
 }
 
 /*
